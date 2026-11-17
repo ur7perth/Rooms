@@ -1,0 +1,56 @@
+# ---------------------------------------------------------
+# RoomDuel configuration
+# ---------------------------------------------------------
+settings:
+  # Default door block for new rooms (change per room with /blockroom)
+  default-block: GLASS
+  # Players needed to close a room (1v1 = 2). Also the max players inside.
+  players-per-room: 2
+  # Seconds before the door closes after the room is full (/lockroom)
+  lock-delay-seconds: 3.0
+  # Seconds before the door opens after a player leaves/dies (/unlockroom)
+  unlock-delay-seconds: 3.0
+  # How many blocks a 3rd player is pushed back
+  push-back-blocks: 2
+
+sounds:
+  door-close:
+    name: BLOCK_IRON_DOOR_CLOSE
+    volume: 1.0
+    pitch: 1.0
+  room-full:
+    name: ENTITY_VILLAGER_NO
+    volume: 1.0
+    pitch: 1.0
+
+messages:
+  prefix: "&8[&6RoomDuel&8] &r"
+  no-permission: "&cYou do not have permission to do that."
+  player-only: "&cOnly players can use this command."
+  wand-given: "&aYou received the Room Wand. &7Left-click = Pos 1, Right-click = Pos 2."
+  pos1-set: "&aPosition 1 set to &e(%x%, %y%, %z%)&a."
+  pos2-set: "&aPosition 2 set to &e(%x%, %y%, %z%)&a."
+  selection-incomplete: "&cSelect both positions with the Room Wand first."
+  selection-world: "&cBoth positions must be in the same world."
+  invalid-name: "&cRoom names may only contain letters, numbers, _ and - (max 32)."
+  room-exists: "&cA room named &e%room% &calready exists."
+  room-not-found: "&cNo room named &e%room% &cwas found."
+  room-created: "&aRoom &e%room% &acreated &7(%size%)&a."
+  room-deleted: "&aRoom &e%room% &awas deleted."
+  invalid-block: "&c&e%block% &cis not a valid solid block."
+  block-changed: "&aRoom &e%room% &anow uses &e%block%&a."
+  invalid-time: "&cInvalid time. Examples: &e5s&c, &e1s&c, &e0.5s"
+  lock-set: "&aRooms will now close &e%time%s &aafter they fill up."
+  lock-set-room: "&aRoom &e%room% &awill now close &e%time%s &aafter it fills up."
+  unlock-set: "&aRooms will now open &e%time%s &aafter a player leaves."
+  unlock-set-room: "&aRoom &e%room% &awill now open &e%time%s &aafter a player leaves."
+  usage-setroom: "&cUsage: /setroom <name>"
+  usage-blockroom: "&cUsage: /blockroom <name> <block>"
+  usage-lockroom: "&cUsage: /lockroom <time> [room]"
+  usage-unlockroom: "&cUsage: /unlockroom <time> [room]"
+  usage-deleteroom: "&cUsage: /deleteroom <name>"
+  # Action bar messages (set to "" to disable)
+  actionbar-enter: "&aYou Enter to &e%room%"
+  actionbar-left: "&cYou Left &e%room%"
+  actionbar-door-closed: "&cThe Door Closed"
+  actionbar-unlock-countdown: "&eThe door opens in &c%seconds%"
