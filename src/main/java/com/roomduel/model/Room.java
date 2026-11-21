@@ -1,5 +1,7 @@
 package com.roomduel.model;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -20,6 +22,12 @@ public class Room {
     private Material blockMaterial = Material.GLASS;
     private Double lockSeconds;   // null = use global value
     private Double unlockSeconds; // null = use global value
+
+    // exit point (/roomex)
+    private boolean hasExit;
+    private String exitWorld;
+    private double exitX, exitY, exitZ;
+    private float exitYaw, exitPitch;
 
     // runtime data (not saved)
     private State state = State.OPEN;
@@ -45,6 +53,40 @@ public class Room {
                 && y >= minY && y <= maxY
                 && z >= minZ && z <= maxZ;
     }
+
+    // ---- exit point ----
+
+    public void setExit(Location loc) {
+        setExit(loc.getWorld().getName(), loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
+    }
+
+    public void setExit(String world, double x, double y, double z, float yaw, float pitch) {
+        this.hasExit = true;
+        this.exitWorld = world;
+        this.exitX = x;
+        this.exitY = y;
+        this.exitZ = z;
+        this.exitYaw = yaw;
+        this.exitPitch = pitch;
+    }
+
+    public boolean hasExit() { return hasExit; }
+    public String getExitWorld() { return exitWorld; }
+    public double getExitX() { return exitX; }
+    public double getExitY() { return exitY; }
+    public double getExitZ() { return exitZ; }
+    public float getExitYaw() { return exitYaw; }
+    public float getExitPitch() { return exitPitch; }
+
+    /** Returns the exit location, or null if not set / world not loaded. */
+    public Location getExit() {
+        if (!hasExit) return null;
+        World w = Bukkit.getWorld(exitWorld);
+        if (w == null) return null;
+        return new Location(w, exitX, exitY, exitZ, exitYaw, exitPitch);
+    }
+
+    // ---- getters / setters ----
 
     public String getName() { return name; }
     public String getWorldName() { return worldName; }
