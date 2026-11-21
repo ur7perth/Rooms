@@ -3,6 +3,7 @@ package com.roomduel.listeners;
 import com.roomduel.RoomDuelPlugin;
 import com.roomduel.manager.RoomManager;
 import com.roomduel.model.Room;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -10,8 +11,11 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerGameModeChangeEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.util.Vector;
 
@@ -46,6 +50,16 @@ public class RoomListener implements Listener {
 
         Player p = e.getPlayer();
         Room current = manager.getPlayerRoom(p.getUniqueId());
+
+        // Spectators (admins watching) are ignored completely: they never count,
+        // never trigger the lock, never get pushed back and see no messages.
+        if (p.getGameMode() == GameMode.SPECTATOR) {
+            if (current != null) {
+                manager.leave(current, p.getUniqueId(), null);
+            }
+            return;
+        }
+
         Room target = manager.getRoomAt(to);
         if (current == target) return;
 
@@ -84,6 +98,44 @@ public class RoomListener implements Listener {
 
     private boolean isSafe(Location loc) {
         return loc.getBlock().isPassable() && loc.clone().add(0, 1, 0).getBlock().isPassable();
+    }
+
+    /** Player respawns inside a full/closed room -> send them to the room's exit point (/roomex). */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onRespawn(PlayerRespawnEvent e) {
+        Room room = manager.getRoomAt(e.getRespawnLocation());
+        if (room == null || manager.canEnter(room)) return;
+
+        Location exit = room.getExit();
+        if (exit != null) {
+            e.setRespawnLocation(exit);
+        }
+    }
+
+    /** Player logs in inside a full/closed room -> send them to the exit point. */
+    @EventHandler
+    public void onJoin(PlayerJoinEvent e) {
+        Player p = e.getPlayer();
+        if (p.getGameMode() == GameMode.SPECTATOR) return;
+
+        Room room = manager.getRoomAt(p.getLocation());
+        if (room == null || manager.canEnter(room)) return;
+
+        Location exit = room.getExit();
+        if (exit != null) {
+            p.teleport(exit);
+        }
+    }
+
+    /** A player inside a room who switches to spectator stops counting as a player. */
+    @EventHandler(ignoreCancelled = true)
+    public void onGameModeChange(PlayerGameModeChangeEvent e) {
+        if (e.getNewGameMode() != GameMode.SPECTATOR) return;
+        Player p = e.getPlayer();
+        Room room = manager.getPlayerRoom(p.getUniqueId());
+        if (room != null) {
+            manager.leave(room, p.getUniqueId(), null);
+        }
     }
 
     @EventHandler
