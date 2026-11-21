@@ -3,6 +3,7 @@ package com.roomduel;
 import com.roomduel.commands.BlockRoomCommand;
 import com.roomduel.commands.DeleteRoomCommand;
 import com.roomduel.commands.LockRoomCommand;
+import com.roomduel.commands.RoomExCommand;
 import com.roomduel.commands.RoomWandCommand;
 import com.roomduel.commands.SetRoomCommand;
 import com.roomduel.commands.UnlockRoomCommand;
@@ -40,6 +41,7 @@ public final class RoomDuelPlugin extends JavaPlugin {
         getCommand("lockroom").setExecutor(new LockRoomCommand(this));
         getCommand("unlockroom").setExecutor(new UnlockRoomCommand(this));
         getCommand("deleteroom").setExecutor(new DeleteRoomCommand(this));
+        getCommand("roomex").setExecutor(new RoomExCommand(this));
 
         getLogger().info("RoomDuel enabled with " + roomManager.getRooms().size() + " room(s).");
     }
