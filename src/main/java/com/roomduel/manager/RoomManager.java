@@ -56,6 +56,11 @@ public class RoomManager {
             room.setBlockMaterial(mat != null ? mat : Material.GLASS);
             if (s.contains("lock-seconds")) room.setLockSeconds(s.getDouble("lock-seconds"));
             if (s.contains("unlock-seconds")) room.setUnlockSeconds(s.getDouble("unlock-seconds"));
+            if (s.contains("exit.world")) {
+                room.setExit(s.getString("exit.world"),
+                        s.getDouble("exit.x"), s.getDouble("exit.y"), s.getDouble("exit.z"),
+                        (float) s.getDouble("exit.yaw"), (float) s.getDouble("exit.pitch"));
+            }
             rooms.put(key.toLowerCase(Locale.ROOT), room);
         }
     }
@@ -74,6 +79,14 @@ public class RoomManager {
             yml.set(p + "block", r.getBlockMaterial().name());
             yml.set(p + "lock-seconds", r.getLockSeconds());
             yml.set(p + "unlock-seconds", r.getUnlockSeconds());
+            if (r.hasExit()) {
+                yml.set(p + "exit.world", r.getExitWorld());
+                yml.set(p + "exit.x", r.getExitX());
+                yml.set(p + "exit.y", r.getExitY());
+                yml.set(p + "exit.z", r.getExitZ());
+                yml.set(p + "exit.yaw", r.getExitYaw());
+                yml.set(p + "exit.pitch", r.getExitPitch());
+            }
         }
         try {
             plugin.getDataFolder().mkdirs();
@@ -375,4 +388,4 @@ public class RoomManager {
         }
         save();
     }
-                      }
+        }
