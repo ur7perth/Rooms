@@ -49,6 +49,9 @@ messages:
   usage-lockroom: "&cUsage: /lockroom <time> [room]"
   usage-unlockroom: "&cUsage: /unlockroom <time> [room]"
   usage-deleteroom: "&cUsage: /deleteroom <name>"
+  usage-roomex: "&cUsage: /roomex <room>"
+  exit-set: "&aExit point of room &e%room% &aset to your current position."
+  exit-inside: "&cThe exit point must be outside the room."
   # Action bar messages (set to "" to disable)
   actionbar-enter: "&aYou Enter to &e%room%"
   actionbar-left: "&cYou Left &e%room%"
